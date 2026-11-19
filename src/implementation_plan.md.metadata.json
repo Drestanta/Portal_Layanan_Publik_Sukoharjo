@@ -1,0 +1,6 @@
+{
+  "summary":  "Implementasi fitur registrasi akun baru warga dan login terintegrasi Firebase Authentication dan Firestore: Form pendaftaran lengkap dengan validasi 16 digit NIK, nama KTP-el, email, nomor handphone, 12 pilihan kecamatan domisili Sukoharjo, sandi, serta login via Email/NIK/QR IKD Kemendagri.",
+  "updatedAt":  "2026-10-29T12:54:35.901242449Z",
+  "requestFeedback":  true,
+  "userFacing":  true
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Portal Layanan Publik Sukoharjo (INA Digital Design System)",
+  "description": "Portal terpadu layanan publik Kabupaten Sukoharjo berbasis standar INA Digital Design System (IDDS) GovTech Indonesia dengan materi edukasi dan sistem desain magang UI/UX.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

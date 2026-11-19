@@ -1,0 +1,144 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Profil akun warga Kabupaten Sukoharjo",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "UID pengguna autentikasi Firebase"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Alamat email terdaftar pengguna"
+        },
+        "fullName": {
+          "type": "string",
+          "description": "Nama lengkap warga sesuai KTP-el"
+        },
+        "nik": {
+          "type": "string",
+          "description": "Nomor Induk Kependudukan 16 digit"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Nomor handphone / WhatsApp aktif"
+        },
+        "district": {
+          "type": "string",
+          "description": "Kecamatan domisili di Sukoharjo"
+        },
+        "village": {
+          "type": "string",
+          "description": "Kelurahan atau desa"
+        },
+        "address": {
+          "type": "string",
+          "description": "Alamat lengkap RT/RW"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["citizen", "officer", "admin"],
+          "description": "Peran pengguna dalam portal"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Waktu akun dibuat"
+        }
+      },
+      "required": ["id", "email", "fullName", "nik", "role", "createdAt"]
+    },
+    "ApplicationTicket": {
+      "title": "ApplicationTicket",
+      "description": "Tiket resi permohonan layanan publik dengan pelacakan real-time",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "ID unik tiket permohonan"
+        },
+        "ticketNumber": {
+          "type": "string",
+          "description": "Nomor resi resmi berformat SKH-YYYY-XXXX"
+        },
+        "serviceId": {
+          "type": "string",
+          "description": "ID layanan publik yang diajukan"
+        },
+        "serviceName": {
+          "type": "string",
+          "description": "Nama layanan publik"
+        },
+        "applicantName": {
+          "type": "string",
+          "description": "Nama pemohon"
+        },
+        "nik": {
+          "type": "string",
+          "description": "NIK pemohon"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Nomor telepon pemohon"
+        },
+        "subdistrict": {
+          "type": "string",
+          "description": "Kecamatan domisili di Sukoharjo"
+        },
+        "userId": {
+          "type": "string",
+          "description": "UID pengguna yang mengajukan"
+        },
+        "submittedDate": {
+          "type": "string",
+          "description": "Tanggal pengajuan"
+        },
+        "estimatedCompletionDate": {
+          "type": "string",
+          "description": "Estimasi tanggal selesai"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["diajukan", "verifikasi", "diproses", "selesai", "ditolak"],
+          "description": "Status permohonan"
+        },
+        "statusLabel": {
+          "type": "string",
+          "description": "Label teks status permohonan"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Catatan disposisi verifikator"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Waktu tiket dibuat"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Waktu update terakhir permohonan"
+        }
+      },
+      "required": ["ticketNumber", "serviceName", "applicantName", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": {
+        "$ref": "#/entities/User"
+      },
+      "description": "Koleksi profil data pengguna terotentikasi"
+    },
+    "/tickets/{ticketId}": {
+      "schema": {
+        "$ref": "#/entities/ApplicationTicket"
+      },
+      "description": "Koleksi tiket permohonan layanan warga dengan listener status real-time"
+    }
+  }
+}

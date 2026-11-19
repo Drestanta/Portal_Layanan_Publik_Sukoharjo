@@ -1,0 +1,68 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.matches('^[a-zA-Z0-9_\\-]+$') && id.size() <= 128;
+    }
+
+    function isValidUser(data) {
+      return data.id is string
+        && data.id == request.auth.uid
+        && data.email is string
+        && data.email.size() <= 256
+        && data.fullName is string
+        && data.fullName.size() >= 2
+        && data.fullName.size() <= 120
+        && data.nik is string
+        && data.nik.matches('^[0-9]{16}$')
+        && data.role in ['citizen', 'officer', 'admin'];
+    }
+
+    function isValidTicket(data) {
+      return data.ticketNumber is string
+        && data.ticketNumber.size() <= 64
+        && data.serviceName is string
+        && data.serviceName.size() <= 200
+        && data.applicantName is string
+        && data.applicantName.size() <= 120
+        && data.status in ['diajukan', 'verifikasi', 'diproses', 'selesai', 'ditolak'];
+    }
+
+    match /users/{userId} {
+      allow get: if isAuthenticated() && (request.auth.uid == userId);
+      allow list: if false;
+      allow create: if isAuthenticated() 
+        && request.auth.uid == userId 
+        && isValidId(userId)
+        && isValidUser(request.resource.data);
+      allow update: if isAuthenticated() 
+        && request.auth.uid == userId 
+        && isValidId(userId)
+        && isValidUser(request.resource.data)
+        && request.resource.data.id == resource.data.id
+        && request.resource.data.role == resource.data.role;
+      allow delete: if false;
+    }
+
+    match /tickets/{ticketId} {
+      // Allows citizens to track a specific application receipt in real-time by receipt ID
+      allow get: if isValidId(ticketId);
+      // List restricted to authenticated user's own tickets
+      allow list: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      // Creation and updates verified by isValidTicket
+      allow create: if isValidId(ticketId) && isValidTicket(request.resource.data);
+      allow update: if isValidId(ticketId) && isValidTicket(request.resource.data);
+      allow delete: if false;
+    }
+  }
+}
